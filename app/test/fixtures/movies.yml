@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  url: MyString
+  feed_id: 1
+  movie_type_id: 1
+  image: MyString
+  publish: false
+  movie_id: MyString
+  play_time: 1
+  site_id: 1
+  site_type_id: 1
+
+two:
+  title: MyString
+  url: MyString
+  feed_id: 1
+  movie_type_id: 1
+  image: MyString
+  publish: false
+  movie_id: MyString
+  play_time: 1
+  site_id: 1
+  site_type_id: 1

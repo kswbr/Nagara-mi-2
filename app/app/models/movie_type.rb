@@ -1,0 +1,2 @@
+class MovieType < ApplicationRecord
+end

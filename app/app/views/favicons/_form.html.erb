@@ -1,0 +1,32 @@
+<%= form_with(model: favicon, local: true) do |form| %>
+  <% if favicon.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(favicon.errors.count, "error") %> prohibited this favicon from being saved:</h2>
+
+      <ul>
+      <% favicon.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :image %>
+    <%= form.text_field :image %>
+  </div>
+
+  <div class="field">
+    <%= form.label :image_type %>
+    <%= form.text_field :image_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

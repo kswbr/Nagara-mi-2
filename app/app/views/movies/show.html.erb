@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @movie.title %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @movie.url %>
+</p>
+
+<p>
+  <strong>Feed:</strong>
+  <%= @movie.feed_id %>
+</p>
+
+<p>
+  <strong>Movie type:</strong>
+  <%= @movie.movie_type_id %>
+</p>
+
+<p>
+  <strong>Image:</strong>
+  <%= @movie.image %>
+</p>
+
+<p>
+  <strong>Publish:</strong>
+  <%= @movie.publish %>
+</p>
+
+<p>
+  <strong>Movie:</strong>
+  <%= @movie.movie_id %>
+</p>
+
+<p>
+  <strong>Play time:</strong>
+  <%= @movie.play_time %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @movie.site_id %>
+</p>
+
+<p>
+  <strong>Site type:</strong>
+  <%= @movie.site_type_id %>
+</p>
+
+<%= link_to 'Edit', edit_movie_path(@movie) %> |
+<%= link_to 'Back', movies_path %>

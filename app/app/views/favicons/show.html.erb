@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Image:</strong>
+  <%= @favicon.image %>
+</p>
+
+<p>
+  <strong>Image type:</strong>
+  <%= @favicon.image_type %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @favicon.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_favicon_path(@favicon) %> |
+<%= link_to 'Back', favicons_path %>
