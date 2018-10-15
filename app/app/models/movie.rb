@@ -48,7 +48,7 @@ class Movie < ApplicationRecord
 
   before_save do |movie|
     movie.publish = movie.play_time != nil && (movie.play_time < 30 || movie.play_time > 600) ? false : true
-    movie.movie_id = self.parseYoutubeId(movie.url) if (movie.movie_type_id == 1)
+    movie.movie_id = parseYoutubeId(movie.url) if (movie.movie_type_id == 1)
   end
 
   def self.parseYoutubeId(url)
