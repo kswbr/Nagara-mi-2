@@ -11,6 +11,7 @@ class Feed < ApplicationRecord
   def self.saveFeed(site_id,entry)
 
     begin
+
       data = self.new
 
       data.title = entry.title
