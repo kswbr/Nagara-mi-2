@@ -6,7 +6,7 @@ class Feed < ApplicationRecord
   validates :url, :presence => true ,:uniqueness => true
   validates :site_id, :presence => true
 
-  scope :latest, -> {order("published DESC")}
+  scope :latest, -> {order("published DESC").limit(1)}
 
   def self.saveFeed(site_id,entry)
 
