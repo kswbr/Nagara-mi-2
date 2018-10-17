@@ -1,8 +1,11 @@
 class Youtube
+
   def initialize(url)
-    id = parseId(url)
-    @data = execDataApi(id)
+    id = Youtube.parseId(url)
+    @data = Youtube.execDataApi(id)
+    @data[:id] = id
   end
+
   def self.parseId(url)
      str = url.match(%r{.*embed/([\w\-]+).*})
      return str[1] if (str.present? && str[1])
@@ -11,7 +14,7 @@ class Youtube
   def self.execDataApi(id)
     id = parseId(id) if (id.include?("embed/"))
     api_url = "https://www.googleapis.com/youtube/v3/videos"
-    api_key = "APIKEYAPIKEYAPIKEY"
+    api_key = ENV["YOUTUBE_ID"]
     part = "snippet,contentDetails,statistics,status"
 
     uri = URI.parse("#{api_url}?id=#{id}&key=#{api_key}&part=#{part}")
@@ -19,16 +22,33 @@ class Youtube
     result = JSON.parse(json, {:symbolize_names => true})
     result
   end
-  def self.getThumbnails(data,key)
+
+  def self.getMoviesByHtml(html)
+    movies = []
     begin
-      data[:items][0][:snippet][:thumbnails][key]
+      html.css("iframe").each do |movie|
+        url = movie.attribute("src").value
+
+        if (url.include?("youtube.com/embed/"))
+          id = parseId(url)
+          movies << "//www.youtube.com/embed/#{id}"
+        end
+      end
+    rescue
+    end
+    movies
+  end
+
+  def getThumbnail(key = :default)
+    begin
+      @data[:items][0][:snippet][:thumbnails][key]
     rescue
       nil
     end
   end
-  def self.getPlayTime(data)
+  def getPlayTime()
     begin
-      duration = data[:items][0][:contentDetails][:duration]
+      duration = @data[:items][0][:contentDetails][:duration]
       hour = duration.match(%r{(\d*)H}) || 0
       min = duration.match(%r{(\d*)M}) || 0
       sec = duration.match(%r{(\d*)S}) || 0
@@ -38,25 +58,5 @@ class Youtube
       0
     end
   end
-  def self.getId(url)
-    movies = getUrl(url)
-    movies.map! {|movie| parseId(movie)}
-  end
-  def self.getUrl(url)
-    movies = []
-    begin
-      doc = Nokogiri.HTML(open(url))
-      doc.css("iframe").each do |movie|
-        url = movie.attribute("src").value
 
-        if (url.include?("youtube.com/embed/"))
-          id = parseId(url)
-          movies << "//www.youtube.com/embed/#{id}"
-        end
-      end
-
-    rescue
-    end
-    movies
-  end
 end
