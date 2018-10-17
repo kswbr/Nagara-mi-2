@@ -1,9 +1,9 @@
 class Youtube
+  attr_accessor :id, :data
 
   def initialize(url)
-    id = Youtube.parseId(url)
-    @data = Youtube.execDataApi(id)
-    @data[:id] = id
+    @id = Youtube.parseId(url)
+    @data = Youtube.execDataApi(@id)
   end
 
   def self.parseId(url)

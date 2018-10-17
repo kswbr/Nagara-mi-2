@@ -32,12 +32,26 @@ RSpec.describe Youtube, type: :lib do
     end
 
     context "インスタンスを生成すると" do
+      before do
+        allow(Youtube).to receive(:execDataApi).and_return({:items => [{
+          :snippet => {
+            :thumbnails => {
+              :default => {:test => "TESTOBJECT"}
+            }
+          },
+          :contentDetails => { :duration => "PT7M27S" }
+        }]})
+      end
       let (:youtube) { Youtube.new("https://www.youtube.com/embed/Xdfci6b0hpE") }
       it "サムネイルが取得できる" do
-        expect(youtube.getThumbnail()).to be_a(Object)
+        obj = {:test => "TESTOBJECT"}
+        expect(youtube.getThumbnail()).to eq obj
       end
       it "再生時間が取得できる" do
-        expect(youtube.getPlayTime()).to be_a(Integer)
+        expect(youtube.getPlayTime()).to eq 447
+      end
+      it "YoutubeIdが取得できる" do
+        expect(youtube.id).to eq "Xdfci6b0hpE"
       end
     end
   end
