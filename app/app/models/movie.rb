@@ -8,7 +8,7 @@ class Movie < ApplicationRecord
   scope :published, -> {where(publish:true)}
   scope :paginated_entries, ->(page) {
     page = page.to_i
-    joins(:feed).order("feeds.published DESC").order("id DESC").offset(page * 9).limit(9)
+    joins(:feed).order("feeds.published DESC").order("id DESC").offset(page * 20).limit(20)
   }
   before_save do |movie|
     if (movie.publish == true)
