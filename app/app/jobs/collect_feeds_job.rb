@@ -20,7 +20,6 @@ class CollectFeedsJob < ApplicationJob
           next
         end
         feed_data = Feed.saveFeed(site.id,feed)
-        p feed_data
         Youtube.getMoviesByHtml(html).each do |movie|
           begin
 
