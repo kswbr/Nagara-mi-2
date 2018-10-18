@@ -13,7 +13,7 @@ class CollectFeedsJob < ApplicationJob
 
       next unless feeds
       feeds.each do |feed|
-        p "   Feed:" +  feed.title
+        p "Feed:" +  feed.title
         begin
           html = Nokogiri.HTML(open(feed.url))
         rescue
@@ -23,7 +23,7 @@ class CollectFeedsJob < ApplicationJob
         Youtube.getMoviesByHtml(html).each do |movie|
           begin
 
-            p "     Moive:" + movie
+            p "Moive:" + movie
 
             data = Movie.new
             data.feed_id = feed_data.id
@@ -35,13 +35,12 @@ class CollectFeedsJob < ApplicationJob
             data.image = thumbnail[:url] if (thumbnail != nil)
             data.play_time = youtube.getPlayTime
 
-            p "     Thumb:" + data.image
-            p "     PlayTime:" + data.play_time.to_s
+            p "Thumb:" + data.image
+            p "PlayTime:" + data.play_time.to_s
 
             data.save
-            p data.errors.messages
           rescue => e
-            p "    =======GetMovieError!!======="
+            p "=======GetMovieError!!======="
             p e
             next
           end
