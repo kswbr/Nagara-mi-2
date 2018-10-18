@@ -31,6 +31,7 @@ class CollectFeedsJob < ApplicationJob
             data.url = movie
             data.publish = true
             youtube = Youtube.new(movie)
+            data.movie_id = youtube.id
             thumbnail = youtube.getThumbnail(:high)
             data.image = thumbnail[:url] if (thumbnail != nil)
             data.play_time = youtube.getPlayTime
