@@ -15,4 +15,5 @@ class Movie < ApplicationRecord
       movie.publish = movie.play_time != nil && (movie.play_time < 30 || movie.play_time > 600) ? false : true
     end
   end
+
 end

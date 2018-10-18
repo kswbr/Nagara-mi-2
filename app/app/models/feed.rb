@@ -11,21 +11,17 @@ class Feed < ApplicationRecord
   def self.saveFeed(site_id,entry)
 
     begin
-
       data = self.new
-
       data.title = entry.title
       data.summary = entry.summary
       data.url = entry.url
       data.published = entry.published
       data.site_id = site_id
-
       data.save
-
     rescue
       return false
     end
-
+    data
   end
 
 end

@@ -6,7 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-
 Site.create(id:1,name:"Cinra",url:"http://www.cinra.net/rss-music.xml",site_type_id:1);
 Site.create(id:2,name:"KiwaKiwa",url:"http://www.kiwakiwa.jp/feed/",site_type_id:1);
 Site.create(id:3,name:"ナタリー",url:"http://natalie.mu/music/feed/news/",site_type_id:1);

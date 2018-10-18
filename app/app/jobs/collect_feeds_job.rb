@@ -19,29 +19,32 @@ class CollectFeedsJob < ApplicationJob
         rescue
           next
         end
-        Feed.saveFeed(site.id,feed)
+        feed_data = Feed.saveFeed(site.id,feed)
+        p feed_data
         Youtube.getMoviesByHtml(html).each do |movie|
           begin
 
             p "     Moive:" + movie
 
-            movie_data = Movie.new
-            movie_data.feed_id = feed.id
-            movie_data.title = feed.title
-            movie_data.url = movie
-
+            data = Movie.new
+            data.feed_id = feed_data.id
+            data.title = feed.title
+            data.url = movie
+            data.publish = true
             youtube = Youtube.new(movie)
             thumbnail = youtube.getThumbnail(:high)
-            movie_data.image = thumbnail[:url] if (thumbnail != nil)
-            movie_data.play_time = youtube.getPlayTime
+            data.image = thumbnail[:url] if (thumbnail != nil)
+            data.play_time = youtube.getPlayTime
 
-            p "     Thumb:" + movie_data.image
-            p "     PlayTime:" + movie_data.play_time.to_s
+            p "     Thumb:" + data.image
+            p "     PlayTime:" + data.play_time.to_s
 
-            movie_data.save
+            data.save
+            p data.errors.messages
           rescue => e
             p "    =======GetMovieError!!======="
             p e
+            next
           end
         end
       end
