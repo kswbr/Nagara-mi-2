@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import { AppBar , Toolbar} from '@material-ui/core'
-import MainVisual from './MainVisual';
 import MovieList from './MovieList';
 
 class App extends Component {

@@ -1,5 +1,5 @@
 class Favicon < ApplicationRecord
-  belongs_to :site
+  # belongs_to :site
 
   def self.getSiteFavicon(url)
     begin
