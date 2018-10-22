@@ -5,6 +5,7 @@ import Movie from './Movie';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from './actions';
+import InfiniteScroll from 'react-infinite-scroller';
 
 const styles = theme => ({
   root: {
@@ -25,9 +26,10 @@ class MovieList extends Component {
   }
 
   render() {
-    console.log(this.props)
     const { classes, movie} = this.props;
+    const {requestMovies} = this.props.actions
     const movies = movie.movies
+
     const MovieCell = (props) => {
       return (
         <Grid item xs={12} sm={6} lg={3}>
@@ -41,11 +43,18 @@ class MovieList extends Component {
     }
 
     return (
-      <div className="MovieList">
-        <Grid container className={classes.content} spacing={0}>
-          {movieList}
-        </Grid>
-      </div>
+      <InfiniteScroll
+          pageStart={0}
+          loadMore={requestMovies}
+          hasMore={!movie.finish}
+          loader={<div className="loader" key={0}>Loading ...</div>}
+          >
+          <div className="MovieList">
+            <Grid container className={classes.content} spacing={0}>
+              {movieList}
+            </Grid>
+          </div>
+      </InfiniteScroll>
     );
   }
 }

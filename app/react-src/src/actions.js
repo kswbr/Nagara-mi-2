@@ -1,12 +1,12 @@
 import axios from 'axios';
 import * as actionTypes from './actionTypes';
 
-const startMoiveRequest = () => ({
-  type: actionTypes.START_MOVIE_REQUEST,
+const startRequest = () => ({
+  type: actionTypes.START_REQUEST,
 });
 
-const endMoiveRequest = () => ({
-  type: actionTypes.END_MOVIE_REQUEST,
+const endRequest = () => ({
+  type: actionTypes.END_REQUEST,
 });
 
 const fetchMovies = (movies) => ({
@@ -14,13 +14,39 @@ const fetchMovies = (movies) => ({
   movies
 });
 
+const incrementPage = () => ({
+  type: actionTypes.INCREMENT_PAGE,
+})
 
-export const requestMovies = (page = 0) => {
-  return dispatch => {
-    dispatch(startMoiveRequest());
-    axios.get('/api/movies',{page}).then((result) => {
+const finishFetchMovies = () => ({
+  type: actionTypes.FINISH_FETCH_MOVIES,
+})
+
+
+export const requestMovies = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    if (state.root.inRequest) {
+      return
+    }
+
+    if (state.movie.finish) {
+      return
+    }
+
+    dispatch(startRequest());
+    const page = state.root.page
+    axios.get('/api/movies',{params: {page}}).then((result) => {
+      if (result.data.length === 0) {
+        dispatch(finishFetchMovies());
+        dispatch(endRequest());
+        return
+      }
       dispatch(fetchMovies(result.data));
-      dispatch(endMoiveRequest());
+      dispatch(incrementPage());
+      dispatch(endRequest());
     })
   };
 }
+
+

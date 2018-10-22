@@ -53,7 +53,6 @@ class Movie extends Component {
   };
 
   render() {
-    console.log(this.props)
     const { classes, image, title , feed, movie_id} = this.props;
     const { site } = feed;
     return (
