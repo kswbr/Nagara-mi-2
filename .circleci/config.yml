@@ -1,0 +1,119 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+       - image: circleci/ruby:2.5.1-node-browsers
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/app
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "app/Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            cd app && bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "app/Gemfile.lock" }}
+
+      # Database setup
+      - run: cd app && bundle exec rake db:create RAILS_ENV=test
+      - run: cd app && bundle exec rake db:schema:load RAILS_ENV=test
+
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            cd app && bundle exec rspec spec/
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+      - run: sudo apt-get update
+      - restore_cache:
+          keys:
+            - v1-node_modules-{{ checksum "app/react-src/package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-node_modules-
+          paths:
+            - ./app/react-src/node_modules
+      - run: cd app/react-src && npm install
+      - save_cache:
+          paths:
+            - ./app/react-src/node_modules
+          key: v1-node_modules-{{ checksum "app/react-src/package.json" }}
+      - run: cd app/react-src && npm run build
+      - run: cd app && bundle exec rake assets:precompile
+      - persist_to_workspace:
+          root: ~/app
+          paths:
+            - app/public
+
+  push:
+    docker:
+      - image: google/cloud-sdk:alpine
+    working_directory: ~/app
+    steps:
+      - checkout
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Install dependencies
+          command: |
+            gcloud components install kubectl
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.05.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+      - run:
+          name: Check docker version
+          command: |
+            docker version
+      - run: ./build_k8s.sh ${PROJECT_NAME}
+      - deploy:
+          name: Deploy application Docker image
+          command: |
+            echo $ACCT_AUTH | base64 -d > ${HOME}/account-auth.json
+            gcloud auth activate-service-account --key-file ${HOME}/account-auth.json
+            gcloud config set project $PROJECT_NAME
+            gcloud config set compute/zone ${CLOUDSDK_COMPUTE_ZONE}
+            gcloud config set container/use_client_certificate True
+            ./push_k8s.sh
+workflows:
+  version: 2
+  build_and_push:
+    jobs:
+      - build
+      - push:
+          requires:
+            - build
