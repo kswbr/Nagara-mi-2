@@ -4,5 +4,5 @@ class Site < ApplicationRecord
   belongs_to :site_type
   # has_one :favicon
   has_many :feeds
-  has_many :movies
+  # has_many :movies
 end
