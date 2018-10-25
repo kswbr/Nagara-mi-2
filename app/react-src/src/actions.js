@@ -22,6 +22,16 @@ const finishFetchMovies = () => ({
   type: actionTypes.FINISH_FETCH_MOVIES,
 })
 
+export const finishPlayMovie = (id) => ({
+  type: actionTypes.FINISH_PLAY_MOVIE,
+  id
+})
+
+export const playMovie = (id) => ({
+  type: actionTypes.PLAY_MOVIE,
+  id
+})
+
 
 export const requestMovies = () => {
   return (dispatch, getState) => {

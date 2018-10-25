@@ -8,6 +8,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Modal from '@material-ui/core/Modal';
 import Youtube from 'react-youtube';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from './actions';
 
 
 const styles = theme => ({
@@ -52,9 +55,36 @@ class Movie extends Component {
     this.setState({ open: false });
   };
 
+  handleStateChange = (event) => {
+    if (event.data === 0) {
+      this.props.actions.finishPlayMovie(this.props.id)
+    }
+    if (event.data === 1) {
+      this.props.actions.playMovie(this.props.id)
+    }
+  };
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const {nextPlayMovieId, currentPlayMovieId, currentFinishedId} = this.props.movie
+
+    if (currentPlayMovieId === -1 && nextPlayMovieId !== -1){
+      if (this.props.id === nextPlayMovieId) {
+        this.props.actions.playMovie(nextPlayMovieId)
+        this.handleOpen()
+      }
+
+      if (this.props.id === currentFinishedId) {
+        this.handleClose()
+      }
+    }
+    return true
+  }
+
   render() {
     const { classes, image, title , feed, movie_id} = this.props;
     const { site } = feed;
+    const youtubeOpts = { playerVars: { autoplay: 1 } }
+
     return (
       <div>
         <Card className={classes.card}>
@@ -85,8 +115,10 @@ class Movie extends Component {
                 {title}
               </Typography>
               <Youtube
+                opts={youtubeOpts}
                 videoId={movie_id}
                 className={classes.youtube}
+                onStateChange={this.handleStateChange}
               />
             </div>
           </Modal>
@@ -99,5 +131,16 @@ Movie.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Movie);
+const mapStateToProps = (state, ownProps) => ({
+  movie: state.movie,
+})
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch),
+  }
+}
+
+const MovieWithStyles = withStyles(styles)(Movie)
+export default connect(mapStateToProps, mapDispatchToProps)(MovieWithStyles);
 

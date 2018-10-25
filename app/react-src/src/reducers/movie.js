@@ -2,7 +2,10 @@ import * as actionTypes from '../actionTypes'
 
 const initialAppState = {
   movies: [],
-  finish: false
+  finish: false,
+  currentFinishedId: -1,
+  nextPlayMovieId: -1,
+  currentPlayMovieId: -1
 }
 
 const movie = (state = initialAppState, action) => {
@@ -13,13 +16,29 @@ const movie = (state = initialAppState, action) => {
       movies
     }
   } else if (action.type === actionTypes.FINISH_FETCH_MOVIES) {
-    console.log({
-      ...state,
-      finish: true
-    })
     return {
       ...state,
       finish: true
+    }
+  } else if (action.type === actionTypes.PLAY_MOVIE) {
+    return {
+      ...state,
+      currentPlayMovieId: action.id,
+      nextPlayMovieId: -1
+    }
+  } else if (action.type === actionTypes.FINISH_PLAY_MOVIE) {
+    const movies = state.movies;
+    let nextPlayMovieId = state.nextPlayMovieId
+    movies.forEach((movie,i) => {
+      if (movie.id === action.id && movies[i + 1]) {
+        nextPlayMovieId = movies[i + 1].id
+      }
+    })
+    return {
+      ...state,
+      currentPlayMovieId: -1,
+      currentFinishedId: action.id,
+      nextPlayMovieId
     }
   } else {
     return state;

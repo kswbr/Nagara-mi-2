@@ -17,7 +17,10 @@ class MovieList extends Component {
 
   state = {
     open: false,
+    currentPlayMovieId: -1,
   };
+
+  movieList = []
 
   constructor(props) {
     super(props);
@@ -32,7 +35,7 @@ class MovieList extends Component {
 
     const MovieCell = (props) => {
       return (
-        <Grid item xs={12} sm={6} lg={3}>
+        <Grid item key={props.id} xs={12} sm={6} lg={3}>
           <Movie {...props} />
         </Grid>
       )
