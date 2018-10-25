@@ -1,6 +1,7 @@
 import * as actionTypes from '../actionTypes'
 import { combineReducers } from 'redux';
 import movie from './movie';
+import site from './site';
 
 const initialAppState = {
   page: 0,
@@ -13,6 +14,12 @@ const root = (state = initialAppState, action) => {
     return {
       ...state,
       page: newPage,
+    }
+
+  } else if (action.type === actionTypes.SET_FILTER_SITE_ID) {
+    return {
+      ...state,
+      page: 0,
     }
   } else if (action.type === actionTypes.START_REQUEST) {
     return {
@@ -32,6 +39,7 @@ const root = (state = initialAppState, action) => {
 const reducer = combineReducers({
   root,
   movie,
+  site,
 });
 
 export default reducer;

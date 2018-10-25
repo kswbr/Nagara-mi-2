@@ -5,15 +5,21 @@ const initialAppState = {
   finish: false,
   currentFinishedId: -1,
   nextPlayMovieId: -1,
-  currentPlayMovieId: -1
+  currentPlayMovieId: -1,
+  filterSiteId: -1
 }
 
 const movie = (state = initialAppState, action) => {
   if (action.type === actionTypes.FETCH_MOVIES) {
-    const movies = state.movies.concat(action.movies)
+    const movies = (action.reset) ? action.movies :  state.movies.concat(action.movies)
     return {
       ...state,
       movies
+    }
+  } else if (action.type === actionTypes.SET_FILTER_SITE_ID) {
+    return {
+      ...state,
+      filterSiteId: action.id
     }
   } else if (action.type === actionTypes.FINISH_FETCH_MOVIES) {
     return {

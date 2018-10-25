@@ -9,10 +9,22 @@ const endRequest = () => ({
   type: actionTypes.END_REQUEST,
 });
 
-const fetchMovies = (movies) => ({
+const fetchMovies = (movies,reset = false) => ({
   type: actionTypes.FETCH_MOVIES,
-  movies
+  movies,
+  reset
 });
+
+const fetchSites = (sites) => ({
+  type: actionTypes.FETCH_SITES,
+  sites
+});
+
+const setFilterSiteId = (id) => ({
+  type: actionTypes.SET_FILTER_SITE_ID,
+  id
+});
+
 
 const incrementPage = () => ({
   type: actionTypes.INCREMENT_PAGE,
@@ -32,7 +44,6 @@ export const playMovie = (id) => ({
   id
 })
 
-
 export const requestMovies = () => {
   return (dispatch, getState) => {
     const state = getState()
@@ -46,7 +57,14 @@ export const requestMovies = () => {
 
     dispatch(startRequest());
     const page = state.root.page
-    axios.get('/api/movies',{params: {page}}).then((result) => {
+
+    let params = {page}
+
+    if (state.movie.filterSiteId) {
+      params.site = state.movie.filterSiteId
+    }
+
+    axios.get('/api/movies',{params} ).then((result) => {
       if (result.data.length === 0) {
         dispatch(finishFetchMovies());
         dispatch(endRequest());
@@ -55,6 +73,37 @@ export const requestMovies = () => {
       dispatch(fetchMovies(result.data));
       dispatch(incrementPage());
       dispatch(endRequest());
+    })
+  };
+}
+
+export const filterMoviesBySite = (site) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    if (state.root.inRequest) {
+      return
+    }
+
+    dispatch(startRequest());
+    axios.get('/api/movies',{params: {site}}).then((result) => {
+      dispatch(fetchMovies(result.data,true));
+      dispatch(endRequest());
+    })
+  };
+
+};
+
+
+export const requestSites = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    if (state.root.inRequest) {
+      return
+    }
+
+    const page = state.root.page
+    axios.get('/api/sites').then((result) => {
+      dispatch(fetchSites(result.data));
     })
   };
 }

@@ -20,10 +20,11 @@ class MovieList extends Component {
     currentPlayMovieId: -1,
   };
 
-  movieList = []
-
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
     const {requestMovies} = this.props.actions
     requestMovies()
   }
@@ -50,7 +51,6 @@ class MovieList extends Component {
           pageStart={0}
           loadMore={requestMovies}
           hasMore={!movie.finish}
-          loader={<div className="loader" key={0}>Loading ...</div>}
           >
           <div className="MovieList">
             <Grid container className={classes.content} spacing={0}>
