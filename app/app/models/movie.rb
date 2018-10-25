@@ -10,6 +10,9 @@ class Movie < ApplicationRecord
     page = page.to_i
     joins(:feed).order("feeds.published DESC").order("id DESC").offset(page * 20).limit(20)
   }
+  scope :has_site_id, ->(id) {
+    joins({:feed => :site}).where(:sites => {:id => id})
+  }
   before_save do |movie|
     if (movie.publish == true)
       movie.publish = movie.play_time != nil && (movie.play_time < 30 || movie.play_time > 600) ? false : true
