@@ -20,10 +20,6 @@ class MovieList extends Component {
     currentPlayMovieId: -1,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     const {requestMovies} = this.props.actions
     requestMovies()

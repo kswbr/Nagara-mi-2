@@ -20,12 +20,6 @@ const fetchSites = (sites) => ({
   sites
 });
 
-const setFilterSiteId = (id) => ({
-  type: actionTypes.SET_FILTER_SITE_ID,
-  id
-});
-
-
 const incrementPage = () => ({
   type: actionTypes.INCREMENT_PAGE,
 })
@@ -101,7 +95,6 @@ export const requestSites = () => {
       return
     }
 
-    const page = state.root.page
     axios.get('/api/sites').then((result) => {
       dispatch(fetchSites(result.data));
     })
