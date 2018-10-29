@@ -5,4 +5,9 @@ class Site < ApplicationRecord
   # has_one :favicon
   has_many :feeds
   # has_many :movies
+
+  scope :has_movies, ->() {
+    joins(feeds: :movies).where("movies.id IS NOT NULL").distinct
+  }
+
 end

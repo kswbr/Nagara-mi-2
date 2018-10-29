@@ -77,7 +77,7 @@ class Header extends Component {
     return (
       <AppBar position="fixed" color="primary">
         <Toolbar >
-          <Typography variant="h6" color="inherit" className={classes.grow}>
+          <Typography  variant="h6" color="inherit" className={classes.grow}>
             Nagara-Mi
           </Typography>
          <div>

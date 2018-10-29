@@ -20,6 +20,12 @@ const fetchSites = (sites) => ({
   sites
 });
 
+const setFilterSiteId = (id) => ({
+  type: actionTypes.SET_FILTER_SITE_ID,
+  id
+});
+
+
 const incrementPage = () => ({
   type: actionTypes.INCREMENT_PAGE,
 })
@@ -79,7 +85,9 @@ export const filterMoviesBySite = (site) => {
     }
 
     dispatch(startRequest());
+    dispatch(setFilterSiteId());
     axios.get('/api/movies',{params: {site}}).then((result) => {
+      dispatch(incrementPage());
       dispatch(fetchMovies(result.data,true));
       dispatch(endRequest());
     })

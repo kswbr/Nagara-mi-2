@@ -19,7 +19,8 @@ const movie = (state = initialAppState, action) => {
   } else if (action.type === actionTypes.SET_FILTER_SITE_ID) {
     return {
       ...state,
-      filterSiteId: action.id
+      filterSiteId: action.id,
+      finish: false
     }
   } else if (action.type === actionTypes.FINISH_FETCH_MOVIES) {
     return {
