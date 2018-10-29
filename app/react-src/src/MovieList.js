@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from './actions';
 import InfiniteScroll from 'react-infinite-scroller';
+import Fade from '@material-ui/core/Fade';
 
 const styles = theme => ({
   root: {
@@ -32,9 +33,11 @@ class MovieList extends Component {
 
     const MovieCell = (props) => {
       return (
-        <Grid item key={props.id} xs={12} sm={6} lg={3}>
-          <Movie {...props} />
-        </Grid>
+        <Fade in={true} timeout={500}>
+          <Grid item key={props.id} xs={12} sm={6} lg={3}>
+            <Movie {...props} />
+          </Grid>
+        </Fade>
       )
     }
     let movieList =[]
