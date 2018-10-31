@@ -11,7 +11,7 @@ import Youtube from 'react-youtube';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from './actions';
-
+import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
 const styles = theme => ({
   media: {
@@ -24,14 +24,18 @@ const styles = theme => ({
   },
   movie: {
     position: 'absolute',
-    width: theme.spacing.unit * 100,
-    height: theme.spacing.unit * 56,
+    width: 0,
+    height: 0,
+    [theme.breakpoints.up('md')]: {
+      width: theme.spacing.unit * 100,
+      height: theme.spacing.unit * 56,
+      padding: theme.spacing.unit * 4,
+    },
     left: '50%',
     top: '50%',
     transform: 'translate(-50%, -50%)',
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
   },
   youtube: {
     position: 'absolute',
@@ -39,6 +43,19 @@ const styles = theme => ({
     top: '50%',
     transform: 'translate(-50%, -50%)',
     marginTop:"20px",
+    width: 360,
+    height: 200,
+
+    [theme.breakpoints.up('sm')]: {
+      width: 512,
+      height: 288,
+    },
+
+    [theme.breakpoints.up('md')]: {
+      width: 640,
+      height: 360,
+    },
+
   }
 });
 
@@ -85,6 +102,16 @@ class Movie extends Component {
     const { site } = feed;
     const youtubeOpts = { playerVars: { autoplay: 1 } }
 
+    const movieTitle = (title) => {
+      if (isWidthUp('md', this.props.width)) {
+        return (
+          <Typography variant="subtitle1" id="modal-title">
+            {title}
+          </Typography>
+        )
+      }
+    }
+
     return (
       <div>
         <Card className={classes.card}>
@@ -111,10 +138,8 @@ class Movie extends Component {
             onClose={this.handleClose}
           >
             <div className={classes.movie}>
-              <Typography variant="subtitle1" id="modal-title">
-                {title}
-              </Typography>
-              <Youtube
+             {movieTitle(title)}
+             <Youtube
                 opts={youtubeOpts}
                 videoId={movie_id}
                 className={classes.youtube}
@@ -142,5 +167,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 const MovieWithStyles = withStyles(styles)(Movie)
-export default connect(mapStateToProps, mapDispatchToProps)(MovieWithStyles);
+const MovieWithWidth = withWidth()(MovieWithStyles)
+export default connect(mapStateToProps, mapDispatchToProps)(MovieWithWidth);
 
