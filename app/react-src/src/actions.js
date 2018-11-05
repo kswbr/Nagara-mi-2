@@ -85,7 +85,7 @@ export const filterMoviesBySite = (site) => {
     }
 
     dispatch(startRequest());
-    dispatch(setFilterSiteId());
+    dispatch(setFilterSiteId(site));
     axios.get('/api/movies',{params: {site}}).then((result) => {
       dispatch(incrementPage());
       dispatch(fetchMovies(result.data,true));
