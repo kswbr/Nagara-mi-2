@@ -5,7 +5,7 @@ import Movie from './Movie';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from './actions';
-import InfiniteScroll from 'react-infinite-scroller';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import Fade from '@material-ui/core/Fade';
 
 const styles = theme => ({
@@ -15,11 +15,6 @@ const styles = theme => ({
 });
 
 class MovieList extends Component {
-
-  state = {
-    open: false,
-    currentPlayMovieId: -1,
-  };
 
   componentDidMount() {
     const {requestMovies} = this.props.actions
@@ -33,8 +28,8 @@ class MovieList extends Component {
 
     const MovieCell = (props) => {
       return (
-        <Fade in={true} timeout={500}>
-          <Grid item key={props.id} xs={12} sm={6} lg={3}>
+        <Fade in={true} timeout={500} key={props.id}>
+          <Grid item key={props.id}  xs={12} sm={6} lg={3}>
             <Movie {...props} />
           </Grid>
         </Fade>
@@ -47,8 +42,8 @@ class MovieList extends Component {
 
     return (
       <InfiniteScroll
-          pageStart={0}
-          loadMore={requestMovies}
+          dataLength={movieList.length}
+          next={requestMovies}
           hasMore={!movie.finish}
           >
           <div className="MovieList">
