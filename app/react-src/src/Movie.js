@@ -165,6 +165,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 const MovieWithStyles = withStyles(styles)(Movie)
-const MovieWithWidth = withWidth()(MovieWithStyles)
+export const MovieWithWidth = withWidth()(MovieWithStyles)
 export default connect(mapStateToProps, mapDispatchToProps)(MovieWithWidth);
 
