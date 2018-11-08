@@ -13,7 +13,7 @@ import { bindActionCreators } from 'redux';
 import * as actions from './actions';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 
-const styles = theme => ({
+export const styles = theme => ({
   media: {
     height: 200,
   },
@@ -58,16 +58,20 @@ const styles = theme => ({
 });
 
 
-class Movie extends Component {
+export class Movie extends Component {
   state = {
     open: false,
   };
   handleOpen = () => {
-    this.setState({ open: true });
+    if (this.state.open !== true) {
+      this.setState({ open: true });
+    }
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    if (this.state.open === true) {
+      this.setState({ open: false });
+    }
   };
 
   handleStateChange = (event) => {
@@ -82,13 +86,16 @@ class Movie extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     const {nextPlayMovieId, currentPlayMovieId, currentFinishedId} = this.props.movie
 
+    // 再生が終了した場合
     if (currentPlayMovieId === -1 && nextPlayMovieId !== -1){
+
+      // 次の動画IDと一致する場合は再生
       if (this.props.id === nextPlayMovieId) {
         this.props.actions.playMovie(nextPlayMovieId)
         this.handleOpen()
-      }
 
-      if (this.props.id === currentFinishedId) {
+      // 再生終了した動画の場合はモーダル閉じる
+      } else if (this.props.id === currentFinishedId) {
         this.handleClose()
       }
     }
@@ -103,7 +110,7 @@ class Movie extends Component {
     const movieTitle = (title) => {
       if (isWidthUp('md', this.props.width)) {
         return (
-          <Typography variant="subtitle1" id="modal-title">
+          <Typography variant="subtitle1" className="modalTitle">
             {title}
           </Typography>
         )
